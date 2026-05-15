@@ -580,20 +580,20 @@ body{
 /* ─── PHONE VERIFY MODAL ─── */
 .modal-bg{
   position:fixed;inset:0;background:rgba(0,0,0,.45);
-  z-index:600;display:none;align-items:center;justify-content:center;
-  padding:20px;
+  z-index:9998;display:none;align-items:center;justify-content:center;
+  padding:20px;box-sizing:border-box;
 }
 .modal-bg.open{display:flex;}
 .modal-box{
   background:var(--white);border-radius:8px;
-  padding:28px 24px 24px;width:100%;max-width:320px;
-  animation:popIn .18s ease;
+  padding:28px 24px 24px;width:100%;max-width:calc(375px - 40px);
+  animation:popIn .18s ease;box-sizing:border-box;overflow:hidden;
 }
 @keyframes popIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
 .modal-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:10px;}
 .modal-sub{font-size:14px;color:var(--text-mid);margin-bottom:18px;line-height:1.5;}
 .modal-sub em{color:var(--blue);font-style:normal;}
-.modal-inp-row{display:flex;gap:8px;margin-bottom:6px;}
+.modal-inp-row{display:flex;flex-direction:column;gap:8px;margin-bottom:6px;width:100%;}
 .modal-inp{
   flex:1;border:1px solid var(--border);border-radius:4px;
   padding:12px 14px;font-size:15px;font-family:inherit;outline:none;
@@ -601,8 +601,8 @@ body{
 .modal-inp:focus{border-color:var(--blue);}
 .modal-inp-btn{
   background:var(--blue);color:#fff;border:none;border-radius:4px;
-  padding:12px 16px;font-size:14px;font-weight:700;cursor:pointer;
-  white-space:nowrap;font-family:inherit;
+  padding:13px;font-size:15px;font-weight:700;cursor:pointer;
+  width:100%;font-family:inherit;
 }
 .modal-hint{font-size:12px;color:var(--text-light);margin-bottom:16px;}
 .modal-close{
@@ -716,123 +716,6 @@ body{
 <body>
 <div class="app">
 <div id="toast"></div>
-<!-- ════════════════════════════
-     DRAWER MENU
-════════════════════════════ -->
-<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
-<div class="drawer" id="drawer">
-  <div class="drawer-head" style="position:relative;">
-    <button class="drawer-close" onclick="closeDrawer()">✕</button>
-    <div class="drawer-head-title">위매치다이사</div>
-    <div class="drawer-head-sub">잘하는 이사/청소업체 고르는 공식</div>
-  </div>
-
-  <!-- 마이페이지 -->
-  <div class="drawer-section">
-    <div class="drawer-section-title">마이페이지</div>
-    <button class="drawer-item" onclick="closeDrawer();showDrawerPage('mypage')">
-      <div class="drawer-item-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-      </div>
-      내 견적 신청 내역
-      <span class="drawer-item-arrow">›</span>
-    </button>
-  </div>
-
-  <!-- 업체 찾기 -->
-  <div class="drawer-section">
-    <div class="drawer-section-title">업체 찾기</div>
-    <button class="drawer-item" onclick="closeDrawer();goStep('type')">
-      <div class="drawer-item-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-      </div>
-      이사 업체 찾기
-      <span class="drawer-item-arrow">›</span>
-    </button>
-    <button class="drawer-item" onclick="closeDrawer();goClean('c-type')">
-      <div class="drawer-item-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      </div>
-      청소 업체 찾기
-      <span class="drawer-item-arrow">›</span>
-    </button>
-  </div>
-
-  <!-- 서비스 안내 -->
-  <div class="drawer-section">
-    <div class="drawer-section-title">서비스 안내</div>
-    <button class="drawer-item" onclick="closeDrawer();showDrawerPage('about')">
-      <div class="drawer-item-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      </div>
-      위매치다이사 소개
-      <span class="drawer-item-arrow">›</span>
-    </button>
-    <button class="drawer-item" onclick="closeDrawer();showDrawerPage('grade')">
-      <div class="drawer-item-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-      </div>
-      평가등급 안내
-      <span class="drawer-item-arrow">›</span>
-    </button>
-  </div>
-
-  <!-- 소식 -->
-  <div class="drawer-section">
-    <div class="drawer-section-title">소식</div>
-    <button class="drawer-item" onclick="closeDrawer();showDrawerPage('notice')">
-      <div class="drawer-item-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      </div>
-      공지사항
-      <span class="drawer-item-arrow">›</span>
-    </button>
-    <button class="drawer-item" onclick="closeDrawer();showDrawerPage('sns')">
-      <div class="drawer-item-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
-      </div>
-      SNS 이벤트
-      <span class="drawer-item-arrow">›</span>
-    </button>
-  </div>
-
-  <!-- 고객지원 -->
-  <div class="drawer-section">
-    <div class="drawer-section-title">고객지원</div>
-    <button class="drawer-item" onclick="closeDrawer();showDrawerPage('faq')">
-      <div class="drawer-item-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      </div>
-      자주 묻는 질문
-      <span class="drawer-item-arrow">›</span>
-    </button>
-    <button class="drawer-item" onclick="closeDrawer();showDrawerPage('inquiry')">
-      <div class="drawer-item-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      </div>
-      1:1 문의
-      <span class="drawer-item-arrow">›</span>
-    </button>
-  </div>
-</div>
-
-
-<!-- ════════════════════════════
-     PHONE VERIFY MODAL
-════════════════════════════ -->
-<div class="modal-bg" id="verifyModal" onclick="closeModal()">
-  <div class="modal-box" style="position:relative;" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-title">전화번호인증</div>
-    <div class="modal-sub">고객님이 입력하신 <em id="modal-phone">010-0000-0000</em>(으)로<br>인증번호를 발송하였습니다.</div>
-    <div class="modal-inp-row">
-      <input class="modal-inp" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="인증번호 입력" id="verify-code">
-      <button class="modal-inp-btn" onclick="doVerify()">인증하기</button>
-    </div>
-    <div class="modal-hint" id="verify-hint">인증번호를 입력해 주세요</div>
-  </div>
-</div>
-
 
 
 <!-- ════════════════════════════
@@ -2579,5 +2462,122 @@ function switchTab(el, tab) {
   document.getElementById('tab-event').style.display  = tab === 'event'  ? 'block' : 'none';
 }
 </script>
+<!-- ════════════════════════════
+     DRAWER MENU
+════════════════════════════ -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head" style="position:relative;">
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    <div class="drawer-head-title">위매치다이사</div>
+    <div class="drawer-head-sub">잘하는 이사/청소업체 고르는 공식</div>
+  </div>
+
+  <!-- 마이페이지 -->
+  <div class="drawer-section">
+    <div class="drawer-section-title">마이페이지</div>
+    <button class="drawer-item" onclick="closeDrawer();showDrawerPage('mypage')">
+      <div class="drawer-item-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </div>
+      내 견적 신청 내역
+      <span class="drawer-item-arrow">›</span>
+    </button>
+  </div>
+
+  <!-- 업체 찾기 -->
+  <div class="drawer-section">
+    <div class="drawer-section-title">업체 찾기</div>
+    <button class="drawer-item" onclick="closeDrawer();goStep('type')">
+      <div class="drawer-item-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </div>
+      이사 업체 찾기
+      <span class="drawer-item-arrow">›</span>
+    </button>
+    <button class="drawer-item" onclick="closeDrawer();goClean('c-type')">
+      <div class="drawer-item-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      청소 업체 찾기
+      <span class="drawer-item-arrow">›</span>
+    </button>
+  </div>
+
+  <!-- 서비스 안내 -->
+  <div class="drawer-section">
+    <div class="drawer-section-title">서비스 안내</div>
+    <button class="drawer-item" onclick="closeDrawer();showDrawerPage('about')">
+      <div class="drawer-item-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      위매치다이사 소개
+      <span class="drawer-item-arrow">›</span>
+    </button>
+    <button class="drawer-item" onclick="closeDrawer();showDrawerPage('grade')">
+      <div class="drawer-item-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      평가등급 안내
+      <span class="drawer-item-arrow">›</span>
+    </button>
+  </div>
+
+  <!-- 소식 -->
+  <div class="drawer-section">
+    <div class="drawer-section-title">소식</div>
+    <button class="drawer-item" onclick="closeDrawer();showDrawerPage('notice')">
+      <div class="drawer-item-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+      공지사항
+      <span class="drawer-item-arrow">›</span>
+    </button>
+    <button class="drawer-item" onclick="closeDrawer();showDrawerPage('sns')">
+      <div class="drawer-item-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+      </div>
+      SNS 이벤트
+      <span class="drawer-item-arrow">›</span>
+    </button>
+  </div>
+
+  <!-- 고객지원 -->
+  <div class="drawer-section">
+    <div class="drawer-section-title">고객지원</div>
+    <button class="drawer-item" onclick="closeDrawer();showDrawerPage('faq')">
+      <div class="drawer-item-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      자주 묻는 질문
+      <span class="drawer-item-arrow">›</span>
+    </button>
+    <button class="drawer-item" onclick="closeDrawer();showDrawerPage('inquiry')">
+      <div class="drawer-item-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      1:1 문의
+      <span class="drawer-item-arrow">›</span>
+    </button>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════
+     PHONE VERIFY MODAL
+════════════════════════════ -->
+<div class="modal-bg" id="verifyModal" onclick="closeModal()">
+  <div class="modal-box" style="position:relative;" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">전화번호인증</div>
+    <div class="modal-sub">고객님이 입력하신 <em id="modal-phone">010-0000-0000</em>(으)로<br>인증번호를 발송하였습니다.</div>
+    <div class="modal-inp-row">
+      <input class="modal-inp" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="인증번호 입력" id="verify-code">
+      <button class="modal-inp-btn" onclick="doVerify()">인증하기</button>
+    </div>
+    <div class="modal-hint" id="verify-hint">인증번호를 입력해 주세요</div>
+  </div>
+</div>
+
 </body>
 </html>
