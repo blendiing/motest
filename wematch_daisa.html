@@ -1292,19 +1292,7 @@ body{
         <div class="type-desc">사무실·상가 청소</div>
       </div>
     </div>
-    <!-- 평수 선택 -->
-    <div style="padding:16px 20px 0;">
-      <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;">청소 면적</div>
-      <select class="select" id="c-area">
-        <option value="">평수를 선택하세요</option>
-        <option>10평 미만</option>
-        <option>10~20평</option>
-        <option>20~30평</option>
-        <option>30~40평</option>
-        <option>40~50평</option>
-        <option>50평 이상</option>
-      </select>
-    </div>
+
   </div>
   <button class="cta-btn" onclick="validateCleanType()">다음</button>
 </div>
@@ -1370,6 +1358,20 @@ body{
         <option value="">층수</option>
         <option>1층</option><option>2층</option><option>3층</option>
         <option>4층</option><option>5층</option><option>6층 이상</option>
+      </select>
+    </div>
+    <div class="divider-full"></div>
+    <!-- 청소 면적 -->
+    <div class="addr-section">
+      <div class="addr-label" style="font-size:20px;font-weight:700;color:var(--text);padding:24px 0 12px;">청소 면적</div>
+      <select class="select" id="c-area">
+        <option value="" disabled hidden>평수를 선택하세요</option>
+        <option>10평 미만</option>
+        <option>10~20평</option>
+        <option>20~30평</option>
+        <option>30~40평</option>
+        <option>40~50평</option>
+        <option>50평 이상</option>
       </select>
     </div>
     <div class="divider-full"></div>
@@ -2143,11 +2145,27 @@ function openVerify(btnId) {
     showToast('휴대전화번호를 입력해 주세요.');
     return;
   }
+  // btnId 저장 (doVerify에서 사용)
+  document.getElementById('verifyModal').dataset.btnId = btnId;
   document.getElementById('modal-phone').textContent = phone;
-  document.getElementById('verify-hint').textContent = '인증번호를 입력해 주세요';
-  document.getElementById('verify-hint').style.color = '';
   document.getElementById('verify-code').value = '';
+  // 인증하기 버튼 초기화
+  const dvBtn = document.getElementById('do-verify-btn');
+  if (dvBtn) { dvBtn.disabled=true; dvBtn.style.opacity='.5'; dvBtn.style.cursor='default'; }
+  const dvAlert = document.getElementById('verify-alert');
+  if (dvAlert) dvAlert.style.display='none';
   document.getElementById('verifyModal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('verifyModal').classList.remove('open');
+}
+function doVerify() {
+  const btnId = document.getElementById('verifyModal').dataset.btnId;
+  if (btnId === 'c-verify-btn') {
+    cPhoneVerified = true;
+  } else {
+    phoneVerified = true;
+  }
   const btn = document.getElementById(btnId);
   if (btn) {
     btn.textContent = '인증완료';
@@ -2155,17 +2173,7 @@ function openVerify(btnId) {
     btn.style.background = '#ccc';
     btn.style.cursor = 'default';
   }
-}
-function closeModal() {
-  document.getElementById('verifyModal').classList.remove('open');
-}
-function doVerify() {
-  const code = document.getElementById('verify-code').value;
-  if (!code) { document.getElementById('verify-hint').textContent = '인증번호를 입력해 주세요'; return; }
-  document.getElementById('verify-hint').textContent = '인증이 완료되었습니다 ✓';
-  phoneVerified = true;
-  document.getElementById('verify-hint').style.color = '#1E7BE8';
-  setTimeout(closeModal, 900);
+  closeModal();
 }
 
 
@@ -2308,7 +2316,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ─ Validation ─ */
-let phoneVerified = false;
+let phoneVerified = false; // 이사용
+let cPhoneVerified = false; // 청소용
 
 // 이사 - 종류 선택
 function validateType() {
@@ -2343,21 +2352,21 @@ function validateEst() {
 // 청소 - 종류 선택
 function validateCleanType() {
   if (!selectedCleanType) { showToast('청소 종류를 선택해 주세요.'); return; }
-  const area = document.getElementById('c-area')?.value;
-  if (!area) { showToast('청소 면적을 선택해 주세요.'); return; }
   goClean('c-date');
 }
 
 // 청소 - 정보입력
 function validateCleanInfo() {
   const addr = document.getElementById('c-selected-text')?.textContent;
+  const area = document.getElementById('c-area')?.value;
   const name = document.getElementById('c-name')?.value.trim();
   const phone= document.getElementById('c-phone')?.value.trim();
 
   if (!addr) { showToast('청소 주소를 입력해 주세요.'); return; }
+  if (!area) { showToast('청소 면적을 선택해 주세요.'); return; }
   if (!name) { showToast('이름을 입력해 주세요.'); return; }
   if (!phone || phone.replace(/[^0-9]/g,'').length < 8) { showToast('휴대전화번호를 입력해 주세요.'); return; }
-  if (!phoneVerified) { showToast('전화번호 인증을 완료해 주세요.'); return; }
+  if (!cPhoneVerified) { showToast('전화번호 인증을 완료해 주세요.'); return; }
   if (!cAgrees['c-terms']) { showToast('이용약관 및 개인정보처리방침에 동의해 주세요.'); return; }
   goClean('c-company');
 }
@@ -2453,6 +2462,34 @@ function onSlotChange(popId, slotEl) {
     }
   }
   updateSelCount();
+}
+
+/* ─ 인증번호 입력 시 버튼 활성화 ─ */
+function toggleVerifyBtn(val) {
+  const btn   = document.getElementById('do-verify-btn');
+  const alert = document.getElementById('verify-alert');
+  if (!btn) return;
+  // 숫자만 허용
+  const cleaned = val.replace(/[^0-9]/g, '');
+  if (document.getElementById('verify-code').value !== cleaned)
+    document.getElementById('verify-code').value = cleaned;
+
+  if (cleaned.length === 6) {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+    if (alert) alert.style.display = 'none';
+  } else if (cleaned.length > 0 && cleaned.length < 6) {
+    btn.disabled = true;
+    btn.style.opacity = '.5';
+    btn.style.cursor = 'default';
+    if (alert) alert.style.display = 'block';
+  } else {
+    btn.disabled = true;
+    btn.style.opacity = '.5';
+    btn.style.cursor = 'default';
+    if (alert) alert.style.display = 'none';
+  }
 }
 /* ─ 탭 전환 ─ */
 function switchTab(el, tab) {
@@ -2572,10 +2609,11 @@ function switchTab(el, tab) {
     <div class="modal-title">전화번호인증</div>
     <div class="modal-sub">고객님이 입력하신 <em id="modal-phone">010-0000-0000</em>(으)로<br>인증번호를 발송하였습니다.</div>
     <div class="modal-inp-row">
-      <input class="modal-inp" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="인증번호 입력" id="verify-code">
-      <button class="modal-inp-btn" onclick="doVerify()">인증하기</button>
+      <input class="modal-inp" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="인증번호 6자리 입력" id="verify-code" maxlength="6" oninput="toggleVerifyBtn(this.value)">
+      <button class="modal-inp-btn" id="do-verify-btn" onclick="doVerify()" disabled style="opacity:.5;cursor:default;">인증하기</button>
     </div>
-    <div class="modal-hint" id="verify-hint">인증번호를 입력해 주세요</div>
+    <div id="verify-alert" style="font-size:12px;color:#E53935;margin-top:4px;display:none;">인증번호 6자리를 입력해 주세요.</div>
+    
   </div>
 </div>
 
